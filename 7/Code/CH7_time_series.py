@@ -40,9 +40,10 @@ def lstm_model(time_steps, rnn_layers, dense_layers=None):
     return _lstm_model
 
 
-regressor = learn.TensorFlowEstimator(model_fn=lstm_model(TIMESTEPS, RNN_LAYERS, DENSE_LAYERS), n_classes=0,
-                                      verbose=2,  steps=TRAINING_STEPS, optimizer='Adagrad',
-                                      learning_rate=0.03, batch_size=BATCH_SIZE)
+#regressor = learn.Estimator(model_fn=lstm_model(TIMESTEPS, RNN_LAYERS, DENSE_LAYERS), n_classes=0,
+#                                      verbose=2,  steps=TRAINING_STEPS, optimizer='Adagrad',
+#                                      learning_rate=0.03, batch_size=BATCH_SIZE)
+regressor = learn.Estimator(model_fn=lstm_model(TIMESTEPS, RNN_LAYERS, DENSE_LAYERS))
 
 df = pd.read_csv("data/elec_load.csv", error_bad_lines=False)
 plt.subplot()
@@ -50,7 +51,7 @@ plot_test, = plt.plot(df.values[:1500], label='Load')
 plt.legend(handles=[plot_test])
 
 
-print df.describe()
+print(df.describe())
 array=(df.values- 147.0) /339.0
 plt.subplot()
 plot_test, = plt.plot(array[:1500], label='Normalized Load')
@@ -64,7 +65,8 @@ y={}
 
 for i in range(0,len(array)-6):
     listX.append(array[i:i+5].reshape([5,1]))
-    listy.append(array[i+6])
+    #listy.append(array[i+6])
+    listy.append(array[i+5])
 
 arrayX=np.array(listX)
 arrayy=np.array(listy)
@@ -89,7 +91,7 @@ validation_monitor = learn.monitors.ValidationMonitor(X['val'], y['val'],
                                                       every_n_steps=PRINT_STEPS,
                                                       early_stopping_rounds=1000)
 
-regressor.fit(X['train'], y['train'], monitors=[validation_monitor], logdir=LOG_DIR)
+regressor.fit(X['train'], y['train'], monitors=[validation_monitor])
 
 predicted = regressor.predict(X['test'])
 rmse = np.sqrt(((predicted - y['test']) ** 2).mean(axis=0))

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 df = pd.read_csv("data/boston.csv", header=0)
-print df.describe()
+print(df.describe())
 
 f, ax1 = plt.subplots()
 plt.figure() # Create a new figure
@@ -32,7 +32,7 @@ with tf.name_scope("Model"):
     b = tf.Variable(tf.random_normal([2], stddev=0.01), name="b1") # create a shared variable
     
     def model(X, w, b):
-        return tf.mul(X, w) + b # We just define the line as X*w + b0  
+        return tf.multiply(X, w) + b # We just define the line as X*w + b0  
 
     y_model = model(X, w, b)
 
@@ -41,14 +41,18 @@ with tf.name_scope("CostFunction"):
 
 train_op = tf.train.AdamOptimizer(0.001).minimize(cost)
 
+#def sum_cost(X,Y):
+#    for i,j in zip(X,Y):
+#        c+= tf.reduce_mean(tf.pow(j-model(i,w,b), 2))
+#    return c/X.shape[0]
 
 sess = tf.Session()
 init = tf.initialize_all_variables()
-tf.train.write_graph(sess.graph, '/home/bonnin/linear2','graph.pbtxt')
-cost_op = tf.scalar_summary("loss", cost)
-merged = tf.merge_all_summaries()
+tf.train.write_graph(sess.graph,r'F:\PythonScript\Building-Machine-Learning-Projects-with-TensorFlow\3','graph.pbtxt')
+cost_op = tf.summary.scalar("loss", cost)
+merged = tf.summary.merge_all()
 sess.run(init)
-writer = tf.train.SummaryWriter('/home/bonnin/linear2', sess.graph)
+writer = tf.summary.FileWriter(r'F:\PythonScript\Building-Machine-Learning-Projects-with-TensorFlow\3', sess.graph)
 
 xvalues = df[[df.columns[2], df.columns[4]]].values.astype(float)
 yvalues = df[df.columns[12]].values.astype(float)
@@ -61,7 +65,11 @@ for a in range (1,50):
     for i, j in zip(xvalues, yvalues):   
         sess.run(train_op, feed_dict={X: i, Y: j}) 
         cost1+=sess.run(cost, feed_dict={X: i, Y: i})/506.00
-        #writer.add_summary(summary_str, i) 
+        #cost1_op1 = tf.summary.scalar("loss1", cost1)
+        #cost1_op2 = tf.summary.scalar("loss2", cost1[1])
+        #summary_op = tf.merge_summary([cost1_op1,cost1_op2])
+    #summary_str= sess.run(cost1_op1, feed_dict={X: i, Y: j})
+    #writer.add_summary(summary_str, a) 
     xvalues, yvalues = shuffle (xvalues, yvalues)
     print (cost1)
     b0temp=b.eval(session=sess)

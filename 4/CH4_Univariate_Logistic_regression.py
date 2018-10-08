@@ -16,8 +16,8 @@ display_step = 1
 sess = tf.Session()
 b=np.zeros((100,2))
 #print pd.get_dummies(df['admit']).values[1]
-print sess.run(tf.one_hot(indices = [1, 3, 2, 4], depth=5, on_value = 1, off_value = 0, axis = 1 , name = "a"))
-#print a.eval(session=sess)
+print(sess.run(tf.one_hot(indices = [1, 3, 2, 4], depth=5, on_value = 1, off_value = 0, axis = 1 , name = "a")))
+#print(a.eval(session=sess))
 
 
 # tf Graph Input
@@ -46,7 +46,7 @@ init = tf.initialize_all_variables()
 with tf.Session() as sess:
     tf.train.write_graph(sess.graph, './graphs','graph.pbtxt')
     sess.run(init)
-    writer = tf.train.SummaryWriter('./graphs', sess.graph)
+    writer = tf.summary.FileWriter('./graphs', sess.graph)
     #Initialize the graph structure
     
     graphnumber=321
@@ -57,7 +57,7 @@ with tf.Session() as sess:
     #Iterate through all the epochs
     for epoch in range(training_epochs):
         avg_cost = 0.
-        total_batch = 400/batch_size
+        total_batch =int(400/batch_size)
         # Loop over all batches
 
         for i in range(total_batch):
@@ -74,7 +74,7 @@ with tf.Session() as sess:
         # Display logs per epoch step
 
         if epoch % display_step == 0:
-            print "Epoch:", '%05d' % (epoch+1), "cost=", "{:.8f}".format(avg_cost)
+            print("Epoch:", '%05d' % (epoch+1), "cost=", "{:.8f}".format(avg_cost))
             
             #Generate a new graph, and add it to the complete graph
             

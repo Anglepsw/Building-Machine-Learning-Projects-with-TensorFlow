@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.datasets.samples_generator import make_circles
 
-DATA_TYPE = 'blobs'
+DATA_TYPE = 'circle'
 N=200
 # Number of clusters, if we choose circles, only 2 will be enough
 if (DATA_TYPE == 'circle'):
@@ -105,10 +105,10 @@ plt.show()
 
 
 end = time.time()
-print ("Found in %.2f seconds" % (end-start)), iters, "iterations"
-print "Centroids:"
-print centers
-print "Cluster assignments:", assignments
+print (("Found in %.2f seconds" % (end-start)), iters, "iterations")
+print ("Centroids:")
+print (centers)
+print ("Cluster assignments:", assignments)
 
 
 

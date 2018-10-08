@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import time
+import os
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -32,13 +33,13 @@ sess.run(tf.initialize_all_variables())
 test=[]
 
 for i, j in zip(te_data, te_features):
-    distances = tf.reduce_sum(tf.square(tf.sub(i , tr_data)),reduction_indices=1)
+    distances = tf.reduce_sum(tf.square(tf.subtract(i , tr_data)),reduction_indices=1)
     neighbor = tf.arg_min(distances,0)
     
     #print tr_features[sess.run(neighbor)]
     #print j
     test.append(tr_features[sess.run(neighbor)])
-print test
+print(test)
 fig, ax = plt.subplots()
 ax.scatter(te_data.transpose()[0], te_data.transpose()[1], marker = 'o', s = 100, c = test, cmap=plt.cm.coolwarm )
 plt.plot()
@@ -50,6 +51,6 @@ plt.plot()
 
 end = time.time()
 print ("Found in %.2f seconds" % (end-start))
-print "Cluster assignments:", test
+print ("Cluster assignments:", test)
 
 
